@@ -503,7 +503,7 @@ setStream(null);
                   : "border-ink-700 bg-ink-850 text-ink-300 hover:border-ink-600"
               }`}
             >
-              {prefs.privacy ? "ðŸ”’ Gemini only" : "ðŸ”“ Private"}
+              {prefs.privacy ? "🔒 Gemini only" : "🔓 Private"}
             </button>
 
             <button
@@ -511,9 +511,10 @@ setStream(null);
               title="Model and settings"
               className="flex items-center gap-1.5 rounded-xl border border-ink-700 bg-ink-850 px-2.5 py-2 text-xs text-ink-300 transition hover:border-ink-600"
             >
-              <span className="hidden sm:inline">{effectiveModel?.label ?? "loadingâ€¦"}</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-good" />
+              <span className="max-w-[9rem] truncate sm:max-w-none">{effectiveModel?.label ?? "Gemini Flash Latest"}</span>
               <span className="hidden text-ink-400 md:inline">
-                {stream?.notice ? "â†º" : `Â· ${effectiveModel?.provider ?? "?"}`}
+                {stream?.notice ? "↺" : `· ${effectiveModel?.provider ?? "auto"}`}
               </span>
             </button>
           </div>
@@ -564,7 +565,7 @@ setStream(null);
                         <Markdown>{stream.text}</Markdown>
                       ) : (
                         <p className="text-sm text-ink-400">
-                          <span className="streaming-dot">â—</span> {stream.failed ?? "thinkingâ€¦"}
+                          <span className="streaming-dot">●</span> {stream.failed ?? "thinking…"}
                         </p>
                       )}
                       {stream.failed && stream.text ? (
@@ -608,7 +609,7 @@ setStream(null);
         {print ? (
           <>
             <div className="print-head">
-              <strong>{print.title}</strong> Â· generated with AIWish Â·{" "}
+              <strong>{print.title}</strong> · generated with AIWish ·{" "}
               {new Date().toLocaleString()}
             </div>
             <Markdown>{print.text}</Markdown>
@@ -679,9 +680,9 @@ function SettingsBar({
         onClick={onToggle}
         className="flex flex-1 items-center gap-2 rounded-xl border border-ink-800 bg-ink-850 px-3 py-2 text-left text-xs text-ink-300 transition hover:border-ink-700"
       >
-        <span className="text-sm leading-none">âš™ï¸</span>
+        <span className="text-sm leading-none">⚙️</span>
         <span className="min-w-0 flex-1 truncate">
-          {prefs.tier === "smart" ? "Smart model" : "Fast model"} Â·{" "}
+          {prefs.tier === "smart" ? "Smart model" : "Fast model"} ·{" "}
           {prefs.provider === "auto" ? "auto provider" : prefs.provider}
         </span>
       </button>
@@ -693,7 +694,7 @@ function SettingsBar({
         aria-label="Lock the app"
         className="rounded-xl border border-ink-800 bg-ink-850 p-2 text-ink-400 transition hover:text-ink-200"
       >
-        ðŸ”’
+        🔒
       </button>
     </div>
   );
@@ -752,6 +753,10 @@ function SettingsSheet({
             {providers.map((p) => {
               const enabled = p === "auto" || (health?.providers.includes(p as ProviderId) ?? false);
               const active = prefs.provider === p;
+              const providerModel = p === "auto"
+                ? null
+                : health?.models.find((m) => m.provider === p && m.tier === prefs.tier) ??
+                  (p === "gemini" ? { id: "gemini-flash-latest", label: "Gemini Flash Latest" } : null);
               return (
                 <button
                   key={p}
@@ -763,6 +768,11 @@ function SettingsSheet({
                 >
                   <span className="flex-1 text-sm text-ink-200">
                     {p === "auto" ? "Auto (use my fallback order)" : p}
+                    {providerModel ? (
+                      <span className="ml-2 rounded-md bg-ink-800 px-1.5 py-0.5 font-mono text-[10px] text-ink-400">
+                        {providerModel.id}
+                      </span>
+                    ) : null}
                   </span>
                   <span className="text-[11px] text-ink-400">
                     {enabled ? (p === "auto" ? `${health?.providers.length ?? 0} available` : "ready") : "no key"}
@@ -772,7 +782,7 @@ function SettingsSheet({
             })}
           </div>
           <p className="mt-2 text-[11px] leading-relaxed text-ink-400">
-            Order: OpenAI â†’ Gemini â†’ NVIDIA â†’ Groq. If the first one errors before replying, the
+            Order: OpenAI → Gemini → NVIDIA → Groq. If the first one errors before replying, the
             next provider answers automatically and the app tells you what happened.
           </p>
         </Section>
