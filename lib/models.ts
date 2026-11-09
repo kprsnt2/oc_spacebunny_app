@@ -94,21 +94,13 @@ export const MODEL_CATALOG: ModelSpec[] = [
     envKey: "GEMINI_MODEL_SMART",
   },
   {
-    id: "gemini-flash-latest",
-    provider: "gemini",
-    label: "Gemini Flash Latest",
-    tier: "fast",
-    vision: true,
-    pdf: true,
-    envKey: "GEMINI_MODEL_FAST",
-  },
-  {
     id: "gemini-flash-lite-latest",
     provider: "gemini",
     label: "Gemini Flash Lite",
     tier: "fast",
     vision: true,
     pdf: true,
+    envKey: "GEMINI_MODEL_FAST",
   },
   {
     id: "gemini-pro-latest",
